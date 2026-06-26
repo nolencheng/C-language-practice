@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C 語言練習器</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- 首頁 -->
+    <div id="page-home" class="page active">
+      <header class="header">
+        <div class="header-content">
+          <h1>C 語言練習器</h1>
+          <p>從基礎到進階，互動式 C 語言學習平台</p>
+        </div>
+        <div class="stats-bar">
+          <div class="stat-item">
+            <span class="stat-value" id="total-answered">0</span>
+            <span class="stat-label">已答題數</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="total-correct">0</span>
+            <span class="stat-label">答對數</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="accuracy-rate">0%</span>
+            <span class="stat-label">正確率</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="main">
+        <div class="category-grid" id="category-grid"></div>
+
+        <section class="quick-start">
+          <h2>快速開始</h2>
+          <div class="quick-buttons">
+            <button class="btn btn-primary" onclick="startRandomQuiz()">
+              🎲 隨機練習（10題）
+            </button>
+            <button class="btn btn-secondary" onclick="startAllCategories()">
+              📚 全科目練習
+            </button>
+            <button class="btn btn-outline" onclick="showHistory()">
+              📊 查看學習記錄
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- 選擇難度頁 -->
+    <div id="page-difficulty" class="page">
+      <div class="page-inner">
+        <button class="back-btn" onclick="goHome()">← 返回</button>
+        <h2 id="difficulty-category-name">選擇難度</h2>
+        <div class="difficulty-cards">
+          <div class="diff-card" onclick="startQuiz('easy')">
+            <div class="diff-icon">🌱</div>
+            <h3>初級</h3>
+            <p>基礎概念與語法入門</p>
+          </div>
+          <div class="diff-card" onclick="startQuiz('medium')">
+            <div class="diff-icon">🌿</div>
+            <h3>中級</h3>
+            <p>進階應用與常見考題</p>
+          </div>
+          <div class="diff-card" onclick="startQuiz('hard')">
+            <div class="diff-icon">🌳</div>
+            <h3>進階</h3>
+            <p>深入原理與邊界情況</p>
+          </div>
+          <div class="diff-card featured" onclick="startQuiz('all')">
+            <div class="diff-icon">🎯</div>
+            <h3>全部混合</h3>
+            <p>隨機抽取各難度題目</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 題目頁 -->
+    <div id="page-quiz" class="page">
+      <div class="quiz-header">
+        <button class="back-btn" onclick="confirmExit()">← 離開</button>
+        <div class="quiz-progress">
+          <span id="question-counter">題目 1 / 10</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+        <div class="quiz-score">
+          <span id="current-score">0</span> 分
+        </div>
+      </div>
+
+      <div class="quiz-body">
+        <div class="question-meta">
+          <span class="category-tag" id="q-category"></span>
+          <span class="difficulty-tag" id="q-difficulty"></span>
+          <span class="type-tag" id="q-type"></span>
+        </div>
+
+        <div class="question-text" id="question-text"></div>
+
+        <div class="code-block-wrapper" id="code-block-wrapper" style="display:none;">
+          <pre><code id="code-block"></code></pre>
+        </div>
+
+        <!-- 選擇題選項 -->
+        <div id="options-area" class="options-area"></div>
+
+        <!-- 填空題輸入 -->
+        <div id="fill-area" class="fill-area" style="display:none;">
+          <div class="fill-hint" id="fill-hint"></div>
+          <div class="fill-input-row">
+            <input type="text" id="fill-input" class="fill-input" placeholder="輸入你的答案..." />
+            <button class="btn btn-primary" onclick="submitFill()">確認</button>
+          </div>
+        </div>
+
+        <!-- 回饋區域 -->
+        <div id="feedback-area" class="feedback-area" style="display:none;">
+          <div class="feedback-result" id="feedback-result"></div>
+          <div class="explanation" id="explanation-text"></div>
+          <button class="btn btn-primary next-btn" id="next-btn" onclick="nextQuestion()">
+            下一題 →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 結果頁 -->
+    <div id="page-result" class="page">
+      <div class="result-content">
+        <div class="result-icon" id="result-icon">🎉</div>
+        <h2 id="result-title">練習完成！</h2>
+        <div class="result-score-display">
+          <div class="big-score" id="big-score">0</div>
+          <div class="score-label">分（共 <span id="max-score">100</span> 分）</div>
+        </div>
+        <div class="result-stats">
+          <div class="result-stat">
+            <span class="r-val" id="r-correct">0</span>
+            <span class="r-label">答對</span>
+          </div>
+          <div class="result-stat">
+            <span class="r-val" id="r-wrong">0</span>
+            <span class="r-label">答錯</span>
+          </div>
+          <div class="result-stat">
+            <span class="r-val" id="r-accuracy">0%</span>
+            <span class="r-label">正確率</span>
+          </div>
+        </div>
+        <div class="result-message" id="result-message"></div>
+        <div class="result-actions">
+          <button class="btn btn-primary" onclick="retryQuiz()">再試一次</button>
+          <button class="btn btn-outline" onclick="goHome()">返回首頁</button>
+        </div>
+        <div class="wrong-review" id="wrong-review"></div>
+      </div>
+    </div>
+
+    <!-- 歷史記錄頁 -->
+    <div id="page-history" class="page">
+      <div class="page-inner">
+        <button class="back-btn" onclick="goHome()">← 返回</button>
+        <h2>學習記錄</h2>
+        <div id="history-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
