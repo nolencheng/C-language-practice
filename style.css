@@ -476,3 +476,447 @@ body {
   .result-actions { flex-direction: column; }
   .big-score { font-size: 3.5rem; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MODE TABS
+══════════════════════════════════════════════════════════════════════════ */
+.mode-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 28px;
+  width: fit-content;
+}
+.mode-tab {
+  background: none;
+  border: none;
+  color: var(--text2);
+  padding: 10px 22px;
+  border-radius: 7px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.mode-tab.active {
+  background: var(--accent);
+  color: white;
+}
+.mode-tab:not(.active):hover { color: var(--text); }
+
+.ex-intro {
+  background: rgba(124,108,245,0.08);
+  border: 1px solid rgba(124,108,245,0.2);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  font-size: 0.88rem;
+  color: var(--text2);
+  line-height: 1.6;
+}
+.ex-cat-progress-text {
+  font-size: 0.75rem;
+  color: var(--text2);
+  margin-top: 4px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   EXERCISE LIST PAGE
+══════════════════════════════════════════════════════════════════════════ */
+.ex-list-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.ex-list-icon { font-size: 1.8rem; }
+.ex-list-header h2 { margin: 0; }
+
+.ex-list-grid { display: flex; flex-direction: column; gap: 10px; }
+.ex-list-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ex-list-item:hover { border-color: var(--accent); transform: translateX(3px); }
+.ex-list-item.passed { border-color: rgba(76,175,115,0.3); background: rgba(76,175,115,0.05); }
+
+.ex-list-num {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--bg3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text2);
+  flex-shrink: 0;
+}
+.ex-list-item.passed .ex-list-num { background: var(--green); color: white; }
+.ex-list-info { flex: 1; }
+.ex-list-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+.ex-list-meta { display: flex; gap: 8px; align-items: center; }
+.diff-badge {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.diff-easy { background: rgba(76,175,115,0.12); color: var(--green); }
+.diff-medium { background: rgba(245,166,35,0.12); color: var(--yellow); }
+.diff-hard { background: rgba(240,82,82,0.1); color: var(--red); }
+.passed-badge { font-size: 0.72rem; color: var(--green); }
+.ex-list-arrow { color: var(--text2); font-size: 1.2rem; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   EXERCISE PAGE HEADER
+══════════════════════════════════════════════════════════════════════════ */
+.ex-page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.ex-page-title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ex-page-category { font-size: 0.75rem; color: var(--text2); }
+.ex-page-name { font-size: 0.95rem; font-weight: 700; }
+.ex-page-diff { font-size: 0.8rem; color: var(--text2); white-space: nowrap; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   EXERCISE LAYOUT
+══════════════════════════════════════════════════════════════════════════ */
+.ex-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  min-height: calc(100vh - 60px);
+}
+.ex-left {
+  border-right: 1px solid var(--border);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  max-height: calc(100vh - 60px);
+  position: sticky;
+  top: 60px;
+}
+.ex-right {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ex-description-box, .expected-output-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.ex-description-box h3, .expected-output-box h3, .hints-section h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text2);
+  margin-bottom: 10px;
+}
+.ex-description {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-wrap;
+  font-family: inherit;
+  margin: 0;
+}
+.expected-output {
+  font-family: 'Consolas', 'Fira Code', monospace;
+  font-size: 0.88rem;
+  color: var(--green);
+  white-space: pre-wrap;
+  margin: 0;
+  background: rgba(76,175,115,0.06);
+  border: 1px solid rgba(76,175,115,0.15);
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HINTS SECTION
+══════════════════════════════════════════════════════════════════════════ */
+.hints-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.hints-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.hint-level-display {
+  font-size: 0.72rem;
+  color: var(--accent);
+  background: rgba(124,108,245,0.12);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.hint-placeholder {
+  font-size: 0.82rem;
+  color: var(--text2);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.hint-card {
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  animation: fadeIn 0.25s ease;
+  border-left: 3px solid var(--accent);
+}
+.hint-card-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.hint-card-text {
+  font-size: 0.84rem;
+  color: var(--text2);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+.hint-code-wrapper {
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-top: 10px;
+  overflow-x: auto;
+}
+.hint-code-wrapper pre { padding: 12px 14px; margin: 0; }
+.hint-code-wrapper code {
+  font-family: 'Consolas', 'Fira Code', monospace;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  white-space: pre;
+  color: #e2e8f0;
+}
+
+.hint-buttons { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.btn-hint {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+.btn-hint:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CODE EDITOR
+══════════════════════════════════════════════════════════════════════════ */
+.editor-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.editor-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+.editor-label { font-size: 0.78rem; color: var(--text2); font-weight: 600; letter-spacing: 0.04em; }
+.editor-actions { display: flex; gap: 8px; }
+.btn-editor {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 12px;
+  color: var(--text2);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.btn-editor:hover { color: var(--text); border-color: var(--text2); }
+.btn-run {
+  background: var(--green);
+  border: none;
+  border-radius: 6px;
+  padding: 5px 16px;
+  color: white;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-run:hover { background: #3d9a5a; }
+.btn-run:disabled { background: var(--bg3); color: var(--text2); cursor: not-allowed; }
+
+.editor-wrapper {
+  display: flex;
+  background: #0d1117;
+  min-height: 280px;
+  max-height: 400px;
+  overflow: hidden;
+}
+.line-numbers {
+  padding: 14px 10px 14px 12px;
+  background: #0d1117;
+  color: #4a5568;
+  font-family: 'Consolas', 'Fira Code', monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  text-align: right;
+  user-select: none;
+  border-right: 1px solid #1e2533;
+  white-space: pre;
+  overflow: hidden;
+  min-width: 38px;
+}
+.code-editor {
+  flex: 1;
+  background: #0d1117;
+  color: #e2e8f0;
+  font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  padding: 14px 16px;
+  border: none;
+  outline: none;
+  resize: none;
+  min-height: 280px;
+  max-height: 400px;
+  overflow-y: auto;
+  tab-size: 4;
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   OUTPUT SECTION
+══════════════════════════════════════════════════════════════════════════ */
+.output-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.output-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+.output-label { font-size: 0.78rem; color: var(--text2); font-weight: 600; letter-spacing: 0.04em; }
+.output-status { font-size: 0.75rem; font-weight: 600; }
+.output-status.ok { color: var(--green); }
+.output-status.error { color: var(--red); }
+
+.output-content {
+  padding: 14px 16px;
+  min-height: 100px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: 'Consolas', 'Fira Code', monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.output-placeholder { color: var(--text2); font-style: italic; }
+.output-ok { color: #e2e8f0; }
+.output-error { color: var(--red); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   VERDICT & NAV
+══════════════════════════════════════════════════════════════════════════ */
+.ex-verdict {
+  padding: 14px 18px;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.7;
+  animation: fadeIn 0.3s;
+}
+.ex-verdict.passed {
+  background: rgba(76,175,115,0.1);
+  border: 1px solid rgba(76,175,115,0.3);
+  color: var(--green);
+}
+.ex-verdict.wrong {
+  background: rgba(240,82,82,0.08);
+  border: 1px solid rgba(240,82,82,0.2);
+  color: var(--red);
+}
+.ex-verdict code {
+  background: var(--bg3);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.82em;
+  color: var(--text);
+}
+.ex-verdict small { font-weight: 400; font-size: 0.82rem; }
+
+.ex-nav {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 4px;
+}
+.ex-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE: Exercise Layout
+══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .ex-layout {
+    grid-template-columns: 1fr;
+  }
+  .ex-left {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+  }
+  .editor-wrapper { max-height: 300px; }
+  .code-editor { max-height: 300px; }
+}
+@media (max-width: 600px) {
+  .mode-tabs { width: 100%; }
+  .mode-tab { flex: 1; text-align: center; }
+  .ex-page-header { padding: 10px 12px; gap: 8px; }
+  .ex-left, .ex-right { padding: 14px; }
+}
