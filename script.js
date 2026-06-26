@@ -517,14 +517,15 @@ async function runCode() {
         : '<span class="output-placeholder">（無輸出）</span>';
 
       if (result.runtimeError) {
-        outputEl.innerHTML += `<br><span class="output-error">${escapeHtml(result.runtimeError)}</span>`;
+        outputEl.innerHTML += `\n<span class="output-error">${escapeHtml(result.runtimeError)}</span>`;
         statusEl.textContent = '執行時錯誤';
         statusEl.className = 'output-status error';
       } else {
         statusEl.textContent = '執行成功';
         statusEl.className = 'output-status ok';
-        checkAnswer(output);
       }
+      // 不論有無 runtime error，只要有 stdout 就比對答案
+      if (output) checkAnswer(output);
     }
   } catch (err) {
     outputEl.innerHTML = `<span class="output-error">無法連線到編譯器，請檢查網路連線。\n\n${escapeHtml(err.message)}</span>`;
@@ -536,19 +537,43 @@ async function runCode() {
   btn.textContent = '▶ 執行';
 }
 
+// 移除 ANSI 顏色碼
+function stripAnsi(str) {
+  return str.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, '').replace(/\x1b\[K/g, '');
+}
+
+// 將 Godbolt stderr 陣列轉成可讀文字（過濾重複行、只保留 error/warning 行）
+function formatGccErrors(stderrArr) {
+  if (!stderrArr || !stderrArr.length) return '';
+  const lines = stderrArr.map(s => stripAnsi(s.text || '')).filter(Boolean);
+  // 只保留 error/warning 相關行，去除純視覺標記行（僅含 ^ ~ | 空白）
+  const important = lines.filter(l => /error:|warning:|note:/.test(l) || /^\s*\d+\s*\|/.test(l));
+  return (important.length ? important : lines).join('\n');
+}
+
 async function compileCode(code) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15000);
+  const timeout = setTimeout(() => controller.abort(), 20000);
 
   try {
-    const res = await fetch('https://wandbox.org/api/compile.json', {
+    const res = await fetch('https://godbolt.org/api/compiler/cg143/compile', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
       body: JSON.stringify({
-        compiler: 'gcc-12.2.0',
-        code: code,
-        'compiler-option-raw': '-lm -w',
-        stdin: '',
+        source: code,
+        options: {
+          userArguments: '-lm -w',
+          executeParameters: { args: [], stdin: '' },
+          compilerOptions: { executorRequest: true },
+          filters: { execute: true },
+          tools: [],
+          libraries: [],
+        },
+        lang: 'c',
+        allowStoreCodeDebug: false,
       }),
       signal: controller.signal,
     });
@@ -557,14 +582,31 @@ async function compileCode(code) {
     if (!res.ok) throw new Error('編譯服務回應錯誤 ' + res.status);
     const data = await res.json();
 
+    const buildCode = data.buildResult?.code ?? 0;
+    const buildStderr = data.buildResult?.stderr || [];
+
+    // 編譯失敗
+    if (buildCode !== 0 || !data.didExecute) {
+      return {
+        output: '',
+        compileError: formatGccErrors(buildStderr) || '編譯失敗（未知錯誤）',
+        runtimeError: '',
+      };
+    }
+
+    // 執行成功或執行時錯誤
+    const stdout = (data.stdout || []).map(s => s.text).join('\n');
+    const stderr = (data.stderr || []).map(s => s.text).join('\n');
+    const exitCode = data.code ?? 0;
+
     return {
-      output: data.program_output || '',
-      compileError: data.compiler_error || '',
-      runtimeError: data.program_error || '',
+      output: stdout,
+      compileError: '',
+      runtimeError: exitCode !== 0 && stderr ? stripAnsi(stderr) : '',
     };
   } catch (e) {
     clearTimeout(timeout);
-    if (e.name === 'AbortError') throw new Error('編譯逾時（15秒）');
+    if (e.name === 'AbortError') throw new Error('編譯逾時（20秒），請確認網路連線');
     throw e;
   }
 }
