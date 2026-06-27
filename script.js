@@ -330,7 +330,7 @@ function renderExCategories() {
       <div class="category-icon">${cat.icon}</div>
       <div class="category-name">${cat.name}</div>
       <div class="category-count">${cat.desc}</div>
-      <div class="ex-cat-progress-text">${passed}/${problems.length} 完成</div>
+      <div class="ex-cat-progress-text">${problems.length} 題・${passed} 已完成</div>
       <div class="category-progress">
         <div class="category-progress-fill" style="width:${pct}%"></div>
       </div>
